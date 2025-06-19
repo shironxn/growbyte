@@ -9,7 +9,7 @@ private:
   bool currentState;
 
 public:
-  RelayModule(uint8_t pin, bool activeLow = true);
+  RelayModule(uint8_t pin, bool activeLow);
   void begin();
   void setState(bool on);
   bool getState() const;

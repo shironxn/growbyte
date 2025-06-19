@@ -7,6 +7,8 @@
 WebServerModule::WebServerModule(AsyncWebServer *srv) : server(srv) {}
 
 void WebServerModule::begin() {
+  WebServerModule *self = this;
+
   if (!LittleFS.begin()) {
     Serial.println("LittleFS Mount Failed, formatting...");
     LittleFS.format();
@@ -23,16 +25,20 @@ void WebServerModule::begin() {
     request->send(404, "text/plain", "Not found");
   });
 
-  server->on("/data", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server->on("/data", HTTP_GET, [self](AsyncWebServerRequest *request) {
     DynamicJsonDocument doc(512);
-    doc["soilMoisture"] = 70;
-    doc["ds18b20"] = 25.3;
-    doc["dht"]["temperature"] = 28.5;
-    doc["dht"]["humidity"] = 60.2;
-    doc["esp32"]["temperature"] = 45.0;
-    doc["waterPumpSwitch"] = true;
-    doc["lightSwitch"] = false;
-    doc["mode"] = "auto";
+    if (self->sensor) {
+      doc["soilMoisture"] = self->sensor->getSoilMoisture();
+      doc["ds18b20"] = self->sensor->getDS18B20();
+      doc["dht"]["temperature"] = self->sensor->getDHTTemperature();
+      doc["dht"]["humidity"] = self->sensor->getDHTHumidity();
+    }
+    doc["esp32"]["temperature"] = temperatureRead();
+    doc["waterPumpSwitch"] =
+        self->pumpRelay ? self->pumpRelay->getState() : false;
+    doc["lightSwitch"] =
+        self->lightRelay ? self->lightRelay->getState() : false;
+    doc["mode"] = self->getMode();
 
     String response;
     serializeJson(doc, response);
@@ -40,11 +46,11 @@ void WebServerModule::begin() {
   });
 
   server->on(
-      "/pump-switch", HTTP_POST, [](AsyncWebServerRequest *request) {}, NULL,
-      [](AsyncWebServerRequest *request, uint8_t *data, size_t len,
-         size_t index, size_t total) {
+      "/pump-switch", HTTP_POST, [](AsyncWebServerRequest *request) {}, nullptr,
+      [self](AsyncWebServerRequest *request, uint8_t *data, size_t len,
+             size_t index, size_t total) {
         DynamicJsonDocument doc(256);
-        DeserializationError error = deserializeJson(doc, data, len);
+        auto error = deserializeJson(doc, data, len);
         if (error) {
           request->send(400, "application/json",
                         "{\"error\":\"Invalid JSON\"}");
@@ -53,15 +59,18 @@ void WebServerModule::begin() {
         bool value = doc["value"];
         Serial.print("Pump switch: ");
         Serial.println(value ? "ON" : "OFF");
+        if (self->pumpRelay)
+          self->pumpRelay->setState(value);
         request->send(200);
       });
 
   server->on(
-      "/light-switch", HTTP_POST, [](AsyncWebServerRequest *request) {}, NULL,
-      [](AsyncWebServerRequest *request, uint8_t *data, size_t len,
-         size_t index, size_t total) {
+      "/light-switch", HTTP_POST, [](AsyncWebServerRequest *request) {},
+      nullptr,
+      [self](AsyncWebServerRequest *request, uint8_t *data, size_t len,
+             size_t index, size_t total) {
         DynamicJsonDocument doc(256);
-        DeserializationError error = deserializeJson(doc, data, len);
+        auto error = deserializeJson(doc, data, len);
         if (error) {
           request->send(400, "application/json",
                         "{\"error\":\"Invalid JSON\"}");
@@ -70,25 +79,50 @@ void WebServerModule::begin() {
         bool value = doc["value"];
         Serial.print("Light switch: ");
         Serial.println(value ? "ON" : "OFF");
+        if (self->lightRelay)
+          self->lightRelay->setState(value);
         request->send(200);
       });
 
   server->on(
-      "/mode", HTTP_POST, [](AsyncWebServerRequest *request) {}, NULL,
-      [](AsyncWebServerRequest *request, uint8_t *data, size_t len,
-         size_t index, size_t total) {
+      "/mode", HTTP_POST, [](AsyncWebServerRequest *request) {}, nullptr,
+      [self](AsyncWebServerRequest *request, uint8_t *data, size_t len,
+             size_t index, size_t total) {
         DynamicJsonDocument doc(256);
-        DeserializationError error = deserializeJson(doc, data, len);
+        auto error = deserializeJson(doc, data, len);
         if (error) {
           request->send(400, "application/json",
                         "{\"error\":\"Invalid JSON\"}");
           return;
         }
         String value = doc["value"];
-        Serial.print("Mode changed to: ");
-        Serial.println(value);
-        request->send(200);
+        if (value == "auto" || value == "manual") {
+          self->setMode(value);
+          Serial.print("Mode changed to: ");
+          Serial.println(value);
+          request->send(200);
+        } else {
+          request->send(400, "application/json",
+                        "{\"error\":\"Invalid mode\"}");
+        }
       });
 
   server->begin();
+}
+
+void WebServerModule::setMode(const String &mode) {
+  if (mode == "auto" || mode == "manual") {
+    this->currentMode = mode;
+  }
+}
+
+String WebServerModule::getMode() const { return this->currentMode; }
+
+void WebServerModule::attachSensor(SensorModule *sensor) {
+  this->sensor = sensor;
+}
+
+void WebServerModule::attachRelays(RelayModule *pump, RelayModule *light) {
+  this->pumpRelay = pump;
+  this->lightRelay = light;
 }

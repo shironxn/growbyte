@@ -3,14 +3,15 @@
 #include "SensorModule.h"
 #include "WebServerModule.h"
 #include "WiFiModule.h"
+#include <Arduino.h>
 
 AsyncWebServer server(80);
 WiFiModule wifiManager;
 WebServerModule web(&server);
 
-SensorModule sensors(DHT_PIN, DS18B20_PIN, SOIL_PIN);
-RelayModule pumpRelay(PUMP_RELAY_PIN, false);
-RelayModule lightRelay(LIGHT_RELAY_PIN, false);
+SensorModule sensors(DHT_PIN, DHT11, DS18B20_PIN, SOIL_PIN);
+RelayModule pumpRelay(PUMP_RELAY_PIN, true);
+RelayModule lightRelay(LIGHT_RELAY_PIN, true);
 
 void setup() {
   Serial.begin(115200);
@@ -30,12 +31,17 @@ void setup() {
 void loop() {
   if (web.getMode() == "auto") {
     float soil = sensors.getSoilMoisture();
-    if (soil < 30.0) {
-      pumpRelay.setState(true);
+
+    if (!isnan(soil)) {
+      if (soil < 50.0) {
+        pumpRelay.setState(true);
+      } else {
+        pumpRelay.setState(false);
+      }
     } else {
-      pumpRelay.setState(false);
+      Serial.println("Error reading soil moisture");
     }
   }
 
-  delay(1000);
+  delay(5000);
 }

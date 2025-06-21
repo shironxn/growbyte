@@ -3,18 +3,24 @@ clang
 %c -Wno-frame-address -std=gnu99 -Wno-old-style-declaration -Os -mlongcalls -ffunction-sections -fdata-sections -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=deprecated-declarations -Wno-unused-parameter -Wno-sign-compare -ggdb -freorder-blocks -Wwrite-strings -fstack-protector -fstrict-volatile-bitfields -Wno-error=unused-but-set-variable -fno-jump-tables -fno-tree-switch-conversion -MMD
 %cpp -Wno-frame-address -std=gnu++11 -fexceptions -fno-rtti -Os -mlongcalls -ffunction-sections -fdata-sections -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=deprecated-declarations -Wno-unused-parameter -Wno-sign-compare -ggdb -freorder-blocks -Wwrite-strings -fstack-protector -fstrict-volatile-bitfields -Wno-error=unused-but-set-variable -fno-jump-tables -fno-tree-switch-conversion -MMD
 
--I/home/shironxn/Dev/greenhouse/include
--I/home/shironxn/Dev/greenhouse/src
--I/home/shironxn/Dev/greenhouse/lib/WiFiModule/src
--I/home/shironxn/Dev/greenhouse/.pio/libdeps/esp32dev/ESP32 Wifi Manager
+-I/home/shironxn/Dev/growbyte/include
+-I/home/shironxn/Dev/growbyte/src
+-I/home/shironxn/Dev/growbyte/lib/WiFiModule
+-I/home/shironxn/Dev/growbyte/lib/WebServerModule
+-I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src
+-I/home/shironxn/Dev/growbyte/lib/SensorModule
+-I/home/shironxn/Dev/growbyte/lib/RelayModule
+-I/home/shironxn/Dev/growbyte/.pio/libdeps/esp32dev/DS18B20/src
+-I/home/shironxn/Dev/growbyte/.pio/libdeps/esp32dev/OneWire
+-I/home/shironxn/Dev/growbyte/.pio/libdeps/esp32dev/DHT-Sensor
+-I/home/shironxn/Dev/growbyte/.pio/libdeps/esp32dev/ESP32 Wifi Manager
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src
--I/home/shironxn/Dev/greenhouse/.pio/libdeps/esp32dev/ESPAsyncWebServer/src
+-I/home/shironxn/Dev/growbyte/.pio/libdeps/esp32dev/ESPAsyncWebServer/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/FS/src
--I/home/shironxn/Dev/greenhouse/.pio/libdeps/esp32dev/AsyncTCP/src
--I/home/shironxn/Dev/greenhouse/.pio/libdeps/esp32dev/ArduinoJson/src
--I/home/shironxn/Dev/greenhouse/lib/WiFiModule/include
+-I/home/shironxn/Dev/growbyte/.pio/libdeps/esp32dev/AsyncTCP/src
+-I/home/shironxn/Dev/growbyte/.pio/libdeps/esp32dev/ArduinoJson/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos
@@ -211,9 +217,6 @@ clang
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/cores/esp32
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/variants/esp32
--I/home/shironxn/Dev/greenhouse/lib/relay
--I/home/shironxn/Dev/greenhouse/lib/sensor
--I/home/shironxn/Dev/greenhouse/lib/web
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/ArduinoOTA/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/AsyncUDP/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src
@@ -229,7 +232,6 @@ clang
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/HTTPUpdateServer/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/I2S/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/Insights/src
--I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/NetBIOS/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/RainMaker/src
 -I/home/shironxn/.platformio/packages/framework-arduinoespressif32/libraries/SD/src

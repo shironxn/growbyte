@@ -1,4 +1,5 @@
 #include "DHTSensor.h"
+#include <Arduino.h>
 
 DHTSensor::DHTSensor(uint8_t pin, uint8_t type) : pin(pin), dht(pin, type) {}
 

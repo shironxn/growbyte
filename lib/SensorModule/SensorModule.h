@@ -3,6 +3,7 @@
 #include "DHTSensor.h"
 #include "DS18B20Sensor.h"
 #include "SoilMoistureSensor.h"
+#include <cstdint>
 
 class SensorModule {
 private:
@@ -11,7 +12,8 @@ private:
   SoilMoistureSensor soil;
 
 public:
-  SensorModule(uint8_t dhtPin, uint8_t dsPin, uint8_t soilMoisturePin);
+  SensorModule(uint8_t dhtPin, uint8_t dhtMode, uint8_t dsPin,
+               uint8_t soilMoisturePin);
   void begin();
   float getDHTTemperature();
   float getDHTHumidity();

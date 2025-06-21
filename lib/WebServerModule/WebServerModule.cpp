@@ -17,12 +17,21 @@ void WebServerModule::begin() {
       return;
     }
   }
-  Serial.println("LittleFS Mounted");
 
   server->serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
 
   server->onNotFound([](AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
+  });
+
+  server->on("/health", HTTP_GET, [](AsyncWebServerRequest *request) {
+    DynamicJsonDocument doc(128);
+    doc["status"] = "ok";
+    doc["uptime"] = millis() / 1000; // waktu uptime dalam detik
+
+    String response;
+    serializeJson(doc, response);
+    request->send(200, "application/json", response);
   });
 
   server->on("/data", HTTP_GET, [self](AsyncWebServerRequest *request) {
@@ -33,7 +42,7 @@ void WebServerModule::begin() {
       doc["dht"]["temperature"] = self->sensor->getDHTTemperature();
       doc["dht"]["humidity"] = self->sensor->getDHTHumidity();
     }
-    doc["esp32"]["temperature"] = temperatureRead();
+    doc["esp32"]["temperature"] = roundf(temperatureRead() * 10.0f) / 10.0f;
     doc["waterPumpSwitch"] =
         self->pumpRelay ? self->pumpRelay->getState() : false;
     doc["lightSwitch"] =

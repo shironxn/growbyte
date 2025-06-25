@@ -9,3 +9,7 @@
 
 #define PUMP_RELAY_PIN 27
 #define LIGHT_RELAY_PIN 26
+
+#define LCD_ADDRESS 0x27
+#define LCD_COLUMNS 16
+#define LCD_ROWS 2

@@ -1,4 +1,5 @@
 #include "Config.h"
+#include "LCDModule.h"
 #include "RelayModule.h"
 #include "SensorModule.h"
 #include "WebServerModule.h"
@@ -12,6 +13,7 @@ WebServerModule web(&server);
 SensorModule sensors(DHT_PIN, DHT11, DS18B20_PIN, SOIL_PIN);
 RelayModule pumpRelay(PUMP_RELAY_PIN, true);
 RelayModule lightRelay(LIGHT_RELAY_PIN, true);
+LCDModule lcd(LCD_ADDRESS, LCD_COLUMNS, LCD_ROWS);
 
 void setup() {
   Serial.begin(115200);
@@ -20,6 +22,7 @@ void setup() {
   sensors.begin();
   pumpRelay.begin();
   lightRelay.begin();
+  lcd.begin();
 
   web.attachSensor(&sensors);
   web.attachRelays(&pumpRelay, &lightRelay);
@@ -29,11 +32,21 @@ void setup() {
 }
 
 void loop() {
+  float dhtTemp = sensors.getDHTTemperature();
+  float dhtHum = sensors.getDHTHumidity();
+  float dsTemp = sensors.getDS18B20();
+  float soil = sensors.getSoilMoisture();
+
+  lcd.clear();
+  lcd.print("ST:" + String((int)dsTemp) + "C AT:" + String((int)dhtTemp) + "C",
+            0, 0);
+  lcd.print("SH:" + String((int)soil) + "% AH:" + String((int)dhtHum) + "%", 0,
+            1);
+
   if (web.getMode() == "auto") {
-    float soil = sensors.getSoilMoisture();
 
     if (!isnan(soil)) {
-      if (soil < 50.0) {
+      if (soil < 30.0) {
         pumpRelay.setState(true);
       } else {
         pumpRelay.setState(false);

@@ -8,34 +8,39 @@
   </head>
   <body>
     <div class="container">
-      <main class="content">
-        <h1>GROWBYTE</h1>
+      <!-- Header -->
+      <div class="header">
+        <h1>GrowByte</h1>
+        <p>Smart Garden Monitoring System</p>
+      </div>
+
+      <!-- Sensor Data Section -->
+      <div class="section">
+        <h2 class="section-title">Sensor Data</h2>
         <div class="sensor-grid">
-          <div class="sensor-card">
-            <span class="sensor-icon"
-              ><svg
+          <div class="card sensor-card">
+            <div class="sensor-icon">
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
                 fill="currentColor"
-                class="bi bi-droplet-half"
+                class="bi bi-moisture"
                 viewBox="0 0 16 16"
               >
                 <path
-                  fill-rule="evenodd"
-                  d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"
+                  d="M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a29 29 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a29 29 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001zm0 0-.364-.343zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267"
                 />
-                <path
-                  fill-rule="evenodd"
-                  d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z"
-                /></svg
-            ></span>
-            <h2>Soil Moisture</h2>
-            <p id="soil-moisture"></p>
+              </svg>
+            </div>
+            <h3>Soil Moisture</h3>
+            <div class="sensor-value" id="soil-moisture">--</div>
+            <div class="sensor-unit">%</div>
           </div>
-          <div class="sensor-card">
-            <span class="sensor-icon"
-              ><svg
+
+          <div class="card sensor-card">
+            <div class="sensor-icon">
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
@@ -48,14 +53,17 @@
                 />
                 <path
                   d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"
-                /></svg
-            ></span>
-            <h2>DS18B20</h2>
-            <p id="ds18b20"></p>
+                />
+              </svg>
+            </div>
+            <h3>Soil Temperature</h3>
+            <div class="sensor-value" id="soil-temperature">--</div>
+            <div class="sensor-unit">°C</div>
           </div>
-          <div class="sensor-card">
-            <span class="sensor-icon"
-              ><svg
+
+          <div class="card sensor-card">
+            <div class="sensor-icon">
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
@@ -65,65 +73,114 @@
               >
                 <path
                   d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5m-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2M0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5"
-                /></svg
-            ></span>
-            <h2>DHT11</h2>
-            <p id="dht11"></p>
+                />
+              </svg>
+            </div>
+            <h3>Air Humidity</h3>
+            <div class="sensor-value" id="air-humidity">--</div>
+            <div class="sensor-unit">%</div>
           </div>
-          <div class="sensor-card">
-            <span class="sensor-icon"
-              ><svg
+
+          <div class="card sensor-card">
+            <div class="sensor-icon">
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
                 fill="currentColor"
-                class="bi bi-cpu"
+                class="bi bi-thermometer-sun"
                 viewBox="0 0 16 16"
               >
                 <path
-                  d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0m-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5zM6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"
-                /></svg
-            ></span>
-            <h2>ESP 32</h2>
-            <p id="esp32"></p>
+                  d="M5 12.5a1.5 1.5 0 1 1-2-1.415V2.5a.5.5 0 0 1 1 0v8.585A1.5 1.5 0 0 1 5 12.5"
+                />
+                <path
+                  d="M1 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM3.5 1A1.5 1.5 0 0 0 2 2.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0L5 10.486V2.5A1.5 1.5 0 0 0 3.5 1m5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5m4.243 1.757a.5.5 0 0 1 0 .707l-.707.708a.5.5 0 1 1-.708-.708l.708-.707a.5.5 0 0 1 .707 0M8 5.5a.5.5 0 0 1 .5-.5 3 3 0 1 1 0 6 .5.5 0 0 1 0-1 2 2 0 0 0 0-4 .5.5 0 0 1-.5-.5M12.5 8a.5.5 0 0 1 .5-.5h1a.5.5 0 1 1 0 1h-1a.5.5 0 0 1-.5-.5m-1.172 2.828a.5.5 0 0 1 .708 0l.707.708a.5.5 0 0 1-.707.707l-.708-.707a.5.5 0 0 1 0-.708M8.5 12a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5"
+                />
+              </svg>
+            </div>
+            <h3>Air Temperature</h3>
+            <div class="sensor-value" id="air-temperature">--</div>
+            <div class="sensor-unit">°C</div>
           </div>
         </div>
+      </div>
 
-        <h2>Control</h2>
-        <div class="control-grid">
-          <div class="control-card">
-            <span>Water Pump</span>
-            <label class="switch">
-              <input type="checkbox" id="pump-switch" />
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="control-card">
-            <span>Light</span>
-            <label class="switch">
-              <input type="checkbox" id="light-switch" />
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="control-card">
-            <span>Mode</span>
-            <div class="radio-group">
-              <label class="custom-radio">
-                <input type="radio" name="mode" value="manual" />
-                <span class="radio-dot"></span>
-                Manual
+      <!-- Control Section -->
+      <div class="section">
+        <h2 class="section-title">Control Panel</h2>
+        <div class="card">
+          <div class="control-grid">
+            <div class="control-item">
+              <div class="control-label">Water Pump</div>
+              <label class="toggle">
+                <input type="checkbox" id="pump-switch" />
+                <span class="toggle-slider"></span>
               </label>
-              <label class="custom-radio">
-                <input type="radio" name="mode" />
-                <span class="radio-dot"></span>
-                Auto</label
-              >
+            </div>
+
+            <div class="control-item">
+              <div class="control-label">Light</div>
+              <label class="toggle">
+                <input type="checkbox" id="light-switch" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="control-item">
+              <div class="control-label">Mode</div>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="manual"
+                    id="manual-mode"
+                  />
+                  <span class="radio-dot"></span>
+                  Manual
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="auto"
+                    id="auto-mode"
+                    checked
+                  />
+                  <span class="radio-dot"></span>
+                  Auto
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="auto-config" id="auto-config">
+            <h3 class="section-subtitle">Water Pump Trigger</h3>
+            <div class="input-group">
+              <label for="soil-threshold">Soil Moisture Threshold (%)</label>
+              <input
+                type="number"
+                id="soil-threshold"
+                min="0"
+                max="100"
+                value="30"
+              />
+            </div>
+            <div class="input-group">
+              <label for="temp-threshold">Temperature Threshold (°C)</label>
+              <input
+                type="number"
+                id="temp-threshold"
+                min="0"
+                max="100"
+                value="25"
+              />
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
-
     <script src="script.js"></script>
   </body>
 </html>

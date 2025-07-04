@@ -10,3 +10,6 @@
 #define LCD_ADDRESS 0x27
 #define LCD_COLUMNS 16
 #define LCD_ROWS 2
+
+#define SOIL_THRESHOLD 30
+#define TEMP_THRESHOLD 25

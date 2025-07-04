@@ -1,8 +1,15 @@
 #include "WebServerModule.h"
-#include <Arduino.h>
-#include <ArduinoJson.h>
-#include <ESPAsyncWebServer.h>
-#include <LittleFS.h>
+
+String formatUptime(unsigned long millis_) {
+  unsigned long seconds = millis_ / 1000;
+  unsigned int hours = seconds / 3600;
+  unsigned int minutes = (seconds % 3600) / 60;
+  unsigned int secs = seconds % 60;
+
+  char buffer[16];
+  snprintf(buffer, sizeof(buffer), "%02u:%02u:%02u", hours, minutes, secs);
+  return String(buffer);
+}
 
 WebServerModule::WebServerModule(AsyncWebServer *srv) : server(srv) {}
 
@@ -24,30 +31,38 @@ void WebServerModule::begin() {
     request->send(404, "text/plain", "Not found");
   });
 
-  server->on("/health", HTTP_GET, [](AsyncWebServerRequest *request) {
-    DynamicJsonDocument doc(128);
-    doc["status"] = "ok";
-    doc["uptime"] = millis() / 1000; // waktu uptime dalam detik
-
-    String response;
-    serializeJson(doc, response);
-    request->send(200, "application/json", response);
-  });
-
   server->on("/data", HTTP_GET, [self](AsyncWebServerRequest *request) {
-    DynamicJsonDocument doc(512);
+    DynamicJsonDocument doc(1024); // Tambahkan buffer jika datanya banyak
+
+    float temp = temperatureRead();
+    doc["esp32"]["temperature"] =
+        isnan(temp) ? 0.0f : roundf(temp * 10.0f) / 10.0f;
+
+    String uptimeStr = formatUptime(millis());
+    doc["esp32"]["uptime"] = uptimeStr.length() > 0 ? uptimeStr : "0:00:00";
+
     if (self->sensor) {
-      doc["soilMoisture"] = self->sensor->getSoilMoisture();
-      doc["ds18b20"] = self->sensor->getDS18B20();
-      doc["dht"]["temperature"] = self->sensor->getDHTTemperature();
-      doc["dht"]["humidity"] = self->sensor->getDHTHumidity();
+      float soil = self->sensor->getSoilMoisture();
+      doc["soilMoisture"] = isnan(soil) ? 0.0f : soil;
+
+      float ds18 = self->sensor->getDS18B20();
+      doc["ds18b20"] = isnan(ds18) ? 0.0f : ds18;
+
+      float dhtTemp = self->sensor->getDHTTemperature();
+      doc["dht"]["temperature"] = isnan(dhtTemp) ? 0.0f : dhtTemp;
+
+      float dhtHum = self->sensor->getDHTHumidity();
+      doc["dht"]["humidity"] = isnan(dhtHum) ? 0.0f : dhtHum;
     }
-    doc["esp32"]["temperature"] = roundf(temperatureRead() * 10.0f) / 10.0f;
+
     doc["waterPumpSwitch"] =
         self->pumpRelay ? self->pumpRelay->getState() : false;
     doc["lightSwitch"] =
         self->lightRelay ? self->lightRelay->getState() : false;
+
     doc["mode"] = self->getMode();
+    doc["soilThreshold"] = self->getSoilThreshold();
+    doc["tempThreshold"] = self->getTempThreshold();
 
     String response;
     serializeJson(doc, response);
@@ -66,8 +81,6 @@ void WebServerModule::begin() {
           return;
         }
         bool value = doc["value"];
-        Serial.print("Pump switch: ");
-        Serial.println(value ? "ON" : "OFF");
         if (self->pumpRelay)
           self->pumpRelay->setState(value);
         request->send(200);
@@ -86,8 +99,6 @@ void WebServerModule::begin() {
           return;
         }
         bool value = doc["value"];
-        Serial.print("Light switch: ");
-        Serial.println(value ? "ON" : "OFF");
         if (self->lightRelay)
           self->lightRelay->setState(value);
         request->send(200);
@@ -107,8 +118,6 @@ void WebServerModule::begin() {
         String value = doc["value"];
         if (value == "auto" || value == "manual") {
           self->setMode(value);
-          Serial.print("Mode changed to: ");
-          Serial.println(value);
           request->send(200);
         } else {
           request->send(400, "application/json",
@@ -116,7 +125,40 @@ void WebServerModule::begin() {
         }
       });
 
+  server->on(
+      "/pump-trigger", HTTP_POST, [](AsyncWebServerRequest *request) {},
+      nullptr,
+      [self](AsyncWebServerRequest *request, uint8_t *data, size_t len,
+             size_t index, size_t total) {
+        DynamicJsonDocument doc(256);
+        auto error = deserializeJson(doc, data, len);
+        if (error) {
+          request->send(400, "application/json",
+                        "{\"error\":\"Invalid JSON\"}");
+          return;
+        }
+
+        if (doc.containsKey("soilThreshold")) {
+          self->setSoilThreshold(doc["soilThreshold"]);
+        }
+
+        if (doc.containsKey("tempThreshold")) {
+          self->setTempThreshold(doc["tempThreshold"]);
+        }
+
+        request->send(200);
+      });
+
   server->begin();
+}
+
+void WebServerModule::attachSensor(SensorModule *sensor) {
+  this->sensor = sensor;
+}
+
+void WebServerModule::attachRelays(RelayModule *pump, RelayModule *light) {
+  this->pumpRelay = pump;
+  this->lightRelay = light;
 }
 
 void WebServerModule::setMode(const String &mode) {
@@ -127,11 +169,14 @@ void WebServerModule::setMode(const String &mode) {
 
 String WebServerModule::getMode() const { return this->currentMode; }
 
-void WebServerModule::attachSensor(SensorModule *sensor) {
-  this->sensor = sensor;
+void WebServerModule::setSoilThreshold(float value) {
+  this->soilThreshold = value;
 }
 
-void WebServerModule::attachRelays(RelayModule *pump, RelayModule *light) {
-  this->pumpRelay = pump;
-  this->lightRelay = light;
+float WebServerModule::getSoilThreshold() const { return this->soilThreshold; }
+
+void WebServerModule::setTempThreshold(float value) {
+  this->tempThreshold = value;
 }
+
+float WebServerModule::getTempThreshold() const { return this->tempThreshold; }

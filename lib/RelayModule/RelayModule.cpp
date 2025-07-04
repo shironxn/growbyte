@@ -10,9 +10,9 @@ void RelayModule::begin() {
 }
 
 void RelayModule::setState(bool on) {
-  currentState = on;
+  this->currentState = on;
   digitalWrite(relayPin, isActiveLow ? (currentState ? LOW : HIGH)
                                      : (currentState ? HIGH : LOW));
 }
 
-bool RelayModule::getState() const { return currentState; }
+bool RelayModule::getState() const { return this->currentState; }

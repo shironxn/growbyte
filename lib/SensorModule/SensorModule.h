@@ -3,7 +3,7 @@
 #include "DHTSensor.h"
 #include "DS18B20Sensor.h"
 #include "SoilMoistureSensor.h"
-#include <cstdint>
+#include <Arduino.h>
 
 class SensorModule {
 private:

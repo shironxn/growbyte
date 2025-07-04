@@ -1,5 +1,4 @@
 #include "SensorModule.h"
-#include <cstdint>
 
 SensorModule::SensorModule(uint8_t dhtPin, uint8_t dhtMode, uint8_t dsPin,
                            uint8_t soilMoisturePin)

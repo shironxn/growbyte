@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DHT.h"
+#include <Arduino.h>
 
 class DHTSensor {
 private:

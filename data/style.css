@@ -12,10 +12,29 @@
   --border-hover: #d1d5db;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md:
-    0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --radius: 8px;
   --radius-lg: 12px;
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark {
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --secondary: #3f3f46;
+  --accent: #818cf8;
+  --surface: #27272a;
+  --background: #18181b;
+  --text-primary: #f4f4f5;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --border: #3f3f46;
+  --border-hover: #52525b;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 * {
@@ -24,17 +43,21 @@
   box-sizing: border-box;
 }
 
+html {
+  transition: var(--transition);
+}
+
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--background);
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
+  transition: var(--transition);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 720px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -56,6 +79,24 @@ body {
 .header p {
   color: var(--text-secondary);
   font-size: 1.1rem;
+}
+
+#theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  transition: var(--transition);
+  z-index: 999;
+}
+
+#theme-toggle svg {
+  width: 24px;
+  height: 24px;
 }
 
 .system-status {
@@ -149,6 +190,7 @@ body {
   left: 0;
   right: 0;
   height: 3px;
+  background-color: var(--primary);
 }
 
 .sensor-icon {
@@ -349,7 +391,6 @@ body {
   }
 
   .system-status {
-    align-items: center;
     flex-direction: row;
     justify-content: center;
     margin-top: 1rem;

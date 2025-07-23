@@ -65,7 +65,11 @@ http://<ESP32_AP_IP>/wifi
 
 ## Demo
 
-Coming soon!
+![Demo 1](./assets/demo-1.jpeg)
+
+![Demo 2](./assets/demo-2.jpeg)
+
+![Demo 3](./assets/demo-3.jpeg)
 
 ## License
 

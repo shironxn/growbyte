@@ -1,4 +1,4 @@
-# GROWBYTE [WIP]
+# GROWBYTE
 
 An IoT-based smart plant monitoring and control system using ESP32. It features real-time data from multiple sensors and allows control of a water pump and light through a responsive web interface.
 
